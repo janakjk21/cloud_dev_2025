@@ -26,7 +26,7 @@ def verify_token(token: str = Depends(oauth2_scheme)):
         )
 
 @router.get("/me", tags=["user"])
-def get_user_profile(token: str = Depends(verify_token)):git remote remove origin
+def get_user_profile(token: str = Depends(verify_token)):
     """
     Returns user details and current credit balance.
     """
