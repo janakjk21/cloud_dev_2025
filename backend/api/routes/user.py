@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
+from database.db import Base
+
 
 router = APIRouter()
 

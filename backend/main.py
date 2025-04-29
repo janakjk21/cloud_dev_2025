@@ -4,6 +4,8 @@ from api.routes.auth import router as auth_router
 from api.routes.history import router as history_router
 from api.routes.jobs import router as jobs_router
 from api.routes.user import router as user_router
+from database.db import engine
+from models import user, history
 
 app = FastAPI()
 
@@ -20,8 +22,12 @@ app.add_middleware(
 app.include_router(auth_router, prefix="/auth", tags=["auth"])
 app.include_router(history_router, prefix="/history", tags=["history"])
 app.include_router(jobs_router, prefix="/jobs", tags=["jobs"])
-app.include_router(user_router, prefix="/user", tags=["user"])  
+app.include_router(user_router, prefix="/user", tags=["user"]) 
+ 
 # Root endpoint
+
+user.Base.metadata.create_all(bind=engine)
+history.Base.metadata.create_all(bind=engine)
 
 @app.get("/")
 def read_root():
