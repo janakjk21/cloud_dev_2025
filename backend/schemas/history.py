@@ -1,17 +1,17 @@
 from pydantic import BaseModel
 
-class HistoryBase(BaseModel):
-    text: str
+class HistoryCreate(BaseModel):
+    query: str
+    result: str
 
-class HistoryCreate(HistoryBase):
-    pass
+class HistoryUpdate(BaseModel):
+    query: str
+    result: str
 
-class HistoryUpdate(HistoryBase):
-    pass
-
-class HistoryResponse(HistoryBase):
+class HistoryOut(BaseModel):
     id: int
-    user_id: int
+    query: str
+    result: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
