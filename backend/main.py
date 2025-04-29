@@ -4,8 +4,11 @@ from api.routes.auth import router as auth_router
 from api.routes.history import router as history_router
 from api.routes.jobs import router as jobs_router
 from api.routes.user import router as user_router
-from database.db import engine
+
 from models import user, history
+from database.db import Base, engine
+from models.user import User
+from models.job import Job
 
 app = FastAPI()
 
@@ -32,3 +35,8 @@ history.Base.metadata.create_all(bind=engine)
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the FastAPI app!"}
+
+
+
+# Auto-create tables
+Base.metadata.create_all(bind=engine)

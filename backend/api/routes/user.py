@@ -1,47 +1,28 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
-from database.db import Base
-
+from sqlalchemy.orm import Session
+from database.db import get_db
+from utils.tokens import decode_access_token
+from models.user import User
+from schemas.user import UserOut
 
 router = APIRouter()
 
-# Mock user data
-mock_user = {
-    "id": 1,
-    "name": "John Doe",
-    "email": "john.doe@example.com",
-    "credits": 10
-}
+def get_current_user(token: str = Depends(decode_access_token), db: Session = Depends(get_db)) -> User:
+    email = token.get("sub")
+    if not email:
+        raise HTTPException(status_code=401, detail="Invalid token")
 
-# OAuth2 scheme for token extraction
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
 
-def verify_token(token: str = Depends(oauth2_scheme)):
-    """
-    Mock token verification. Replace with real logic.
-    """
-    if token != "valid_token":  # Replace with actual token validation
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or expired token",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+    return user
 
-@router.get("/me", tags=["user"])
-def get_user_profile(token: str = Depends(verify_token)):
-    """
-    Returns user details and current credit balance.
-    """
-    return {
-        "id": mock_user["id"],
-        "name": mock_user["name"],
-        "email": mock_user["email"],
-        "credits": mock_user["credits"]
-    }
+@router.get("/me", response_model=UserOut, tags=["user"])
+def get_user_profile(current_user: User = Depends(get_current_user)):
+    return current_user
 
 @router.get("/me/credits", tags=["user"])
-def get_user_credits(token: str = Depends(verify_token)):
-    """
-    Returns the user's current credit balance.
-    """
-    return {"credits": mock_user["credits"]}
+def get_user_credits(current_user: User = Depends(get_current_user)):
+    # Mock logic; assume 'credits' is part of the user model, or customize as needed
+    return {"credits": getattr(current_user, "credits", 10)}
