@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 
 const Login = () => {
-    const [email, setEmail] = useState("");
+    const [email, setEmail] = useState(""); // ✅ use email instead of username
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
 
@@ -10,35 +10,36 @@ const Login = () => {
         e.preventDefault();
         if (!email || !password) {
             setError("Please fill in all fields");
-        } else {
-            setError("");
+            return;
+        }
+        setError("");
 
-            try {
-                // Simulate a login API call
-                const response = await fetch("http://127.0.0.1:8000/auth/login", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ email, password }),
-                });
+        try {
+            const response = await fetch("http://127.0.0.1:8000/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, password }), // ✅ send email instead of username
+            });
 
-                if (!response.ok) {
-                    const data = await response.json();
-                    throw new Error(data.detail || "Login failed");
-                }
+            const data = await response.json();
 
-                const data = await response.json();
-                console.log("Login successful:", data);
-
-                // Save the token in sessionStorage
-                sessionStorage.setItem("access_token", data.access_token);
-
-                // Redirect or perform further actions
-                alert("Login successful!");
-            } catch (err) {
-                setError(err.message);
+            if (!response.ok) {
+                throw new Error(data.detail || "Login failed");
             }
+
+            console.log("Login successful:", data);
+
+            // Save token
+            sessionStorage.setItem("access_token", data.access_token);
+            sessionStorage.setItem("user", JSON.stringify(data.user));
+
+            alert("Login successful!");
+
+        } catch (err) {
+            console.error(err);
+            setError(err.message);
         }
     };
 

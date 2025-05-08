@@ -7,6 +7,7 @@ import ImageSearch from "./ImageSearch";
 import MainDashboard from "./searchfeatures/Maindashboard";
 import Login from "./auth/login";
 import Register from "./auth/register";
+import JobSubmitter from "./searchfeatures/JobSubmitter";
 
 
 
@@ -15,6 +16,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<MainDashboard></MainDashboard>} />
+        <Route path="/jobs" element={<JobSubmitter></JobSubmitter>} />
         <Route path="/create" element={<ContactForm />} />
         <Route path="/search-images" element={<ImageSearch />} />
         <Route path="/login" element={<Login />} />
