@@ -4,6 +4,7 @@ from api.routes.auth import router as auth_router
 from api.routes.history import router as history_router
 from api.routes.jobs import router as jobs_router
 from api.routes.user import router as user_router
+from database.db import Base, engine
 
 from models import user, history
 from database.db import Base, engine
@@ -38,5 +39,7 @@ def read_root():
 
 
 
-# Auto-create tables
-Base.metadata.create_all(bind=engine)
+if __name__ == "__main__":
+    from database.db import engine, Base
+    Base.metadata.create_all(bind=engine)
+
