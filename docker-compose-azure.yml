@@ -1,13 +1,19 @@
-version: '3.9'
-
 services:
   frontend:
-    image: ronitacr20354.azurecr.io/frontend:latest
-    ports:
-      - "3000:80"
+    build:
+      context: ./frontend
 
   backend:
-    image: ronitacr20354.azurecr.io/backend:latest
+    build:
+      context: ./backend
+    expose:
+      - "8000"
+
+  nginx:
+    build:
+      context: ./nginx
     ports:
-      - "8000:8000"
-      
+      - "80:80"
+    depends_on:
+      - frontend
+      - backend
