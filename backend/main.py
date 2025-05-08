@@ -6,40 +6,31 @@ from api.routes.jobs import router as jobs_router
 from api.routes.user import router as user_router
 from database.db import Base, engine
 
-from models import user, history
-from database.db import Base, engine
-from models.user import User
-from models.job import Job
-
+# Initialize FastAPI app
 app = FastAPI()
 
-# Add CORS middleware
+# CORS for both local dev and production frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Replace with the frontend's origin
+    allow_origins=[
+        "http://localhost:5173",
+        "https://your-new-app-name.azurewebsites.net"
+    ],
     allow_credentials=True,
-    allow_methods=["*"],  # Allow all HTTP methods
-    allow_headers=["*"],  # Allow all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Include routers
 app.include_router(auth_router, prefix="/auth", tags=["auth"])
 app.include_router(history_router, prefix="/history", tags=["history"])
 app.include_router(jobs_router, prefix="/jobs", tags=["jobs"])
-app.include_router(user_router, prefix="/user", tags=["user"]) 
- 
-# Root endpoint
+app.include_router(user_router, prefix="/user", tags=["user"])
 
-user.Base.metadata.create_all(bind=engine)
-history.Base.metadata.create_all(bind=engine)
+# Auto-create DB tables
+Base.metadata.create_all(bind=engine)
 
+# Root route
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the FastAPI app!"}
-
-
-
-if __name__ == "__main__":
-    from database.db import engine, Base
-    Base.metadata.create_all(bind=engine)
-
