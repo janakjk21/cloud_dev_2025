@@ -1,7 +1,7 @@
 export async function submitJob(inputData) {
   const token = sessionStorage.getItem("access_token");
 
-  const response = await fetch("https://your-new-app-name.azurewebsites.net/jobs/submit", {
+  const response = await fetch("https://your-new-app-name.azurewebsites.net/api/jobs/submit", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -24,7 +24,7 @@ export async function submitJob(inputData) {
 export async function checkJobStatus(jobId) {
   const token = sessionStorage.getItem("access_token");
 
-  const response = await fetch(`https://your-new-app-name.azurewebsites.net/jobs/${jobId}/status`, {
+  const response = await fetch(`https://your-new-app-name.azurewebsites.net/api/jobs/${jobId}/status`, {
     method: "GET",
     headers: {
       "Authorization": `Bearer ${token}`,

@@ -32,7 +32,7 @@ const Maindashboard = () => {
                 throw new Error("No access token found. Please log in again.");
             }
 
-            const response = await fetch("https://your-new-app-name.azurewebsites.net/history", {
+            const response = await fetch("https://your-new-app-name.azurewebsites.net/api/history", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -62,7 +62,7 @@ const Maindashboard = () => {
                 return;
             }
 
-            const response = await fetch("https://your-new-app-name.azurewebsites.net/history", {
+            const response = await fetch("https://your-new-app-name.azurewebsites.net/api/history", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -93,7 +93,7 @@ const Maindashboard = () => {
                 return;
             }
 
-            const response = await fetch(`https://your-new-app-name.azurewebsites.net/history/${id}`, {
+            const response = await fetch(`https://your-new-app-name.azurewebsites.net/api/history/${id}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",

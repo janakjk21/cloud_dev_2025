@@ -15,7 +15,7 @@ const Login = () => {
         setError("");
 
         try {
-            const response = await fetch("https://your-new-app-name.azurewebsites.net/auth/login", {
+            const response = await fetch("https://your-new-app-name.azurewebsites.net/api/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
