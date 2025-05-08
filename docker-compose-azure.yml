@@ -10,3 +10,4 @@ services:
     image: ronitacr20354.azurecr.io/backend:latest
     ports:
       - "8000:8000"
+      
