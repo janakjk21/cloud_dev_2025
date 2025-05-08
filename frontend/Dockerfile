@@ -1,24 +1,17 @@
-# frontend/Dockerfile
-
-# Stage 1: Build React app
-FROM node:20-alpine AS build
+# Build stage
+FROM node:16 as build
 
 WORKDIR /app
-COPY package*.json ./
+
+COPY package.json package-lock.json ./
 RUN npm install
-COPY . . 
-RUN npm run build  # produces a build/ directory with static files
+COPY . ./
+RUN npm run build
 
-# Stage 2: Serve with Nginx
+# Production stage
 FROM nginx:alpine
-# Copy custom Nginx config for proxying /api requests
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-# Copy React build output to Nginx's web root
 
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/build /usr/share/nginx/html
 
-
-# Expose port 80 for the web
 EXPOSE 80
-
-# Nginx will start by default via its entrypoint
+CMD ["nginx", "-g", "daemon off;"]
