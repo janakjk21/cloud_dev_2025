@@ -15,7 +15,7 @@ const JobSubmitter = () => {
 
     const fetchHistory = async () => {
         try {
-            const response = await fetch("http://127.0.0.1:8000/history", {
+            const response = await fetch("https://your-new-app-name.azurewebsites.net/history", {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -34,7 +34,7 @@ const JobSubmitter = () => {
 
     const fetchCredits = async () => {
         try {
-            const response = await fetch("http://127.0.0.1:8000/user/me/credits", {
+            const response = await fetch("https://your-new-app-name.azurewebsites.net/user/me/credits", {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.ok) {
@@ -48,7 +48,7 @@ const JobSubmitter = () => {
 
     const saveToHistory = async (query, result) => {
         try {
-            await fetch("http://127.0.0.1:8000/history", {
+            await fetch("https://your-new-app-name.azurewebsites.net/history", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
