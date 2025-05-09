@@ -176,14 +176,4 @@ Deployed using GitHub Actions:
 
 ---
 
-## 📧 Contact
 
-Maintainer: **Ronit Kayastha**  
-Email: `your-email@example.com`  
-GitHub: [@yourusername](https://github.com/yourusername)
-
----
-
-## ✅ License
-
-This project is licensed under the MIT License.
