@@ -1,204 +1,189 @@
 
-# 📘 AI-Powered Cloud API – End-User and Developer Documentation
+# AI-Powered Full-Stack FastAPI + React Web App
 
-## 📌 1. Project Overview
+This is a full-stack web application combining **FastAPI** as the backend and **React** as the frontend. It supports user registration/login, job submission to an AI model, credit tracking, and a searchable chat and image history. The application is containerized with Docker and deployed on **Azure App Service** using **GitHub Actions**.
 
-**Title:** AI-Powered Cloud Service API  
-**Module:** CMP9785M Cloud Development  
-**Technology Stack:** FastAPI (Python), PostgreSQL, JWT, Docker, [Frontend: React/HTML+JS], Third-party AI API  
-**Purpose:**  
-To provide a secure, scalable, AI-enhanced backend API that enables users to submit jobs to an external AI service (e.g., image generation, summarization, translation, etc.), with account management, credit-based access, job queueing, and notifications.
+🔗 **Live App**: [my-fastapi-app-3389.azurewebsites.net](https://your-new-app-name.azurewebsites.net/login)
 
-## 🔐 2. Authentication & Authorization
+---
 
-### ➤ Sign Up
-- **Endpoint:** `POST /signup`
-- **Payload:**
-  ```json
-  {
-    "username": "your_name",
-    "password": "your_password"
-  }
-  ```
-- **Returns:** JWT access token on success
+## 🚀 Features
 
-### ➤ Login
-- **Endpoint:** `POST /login`
-- **Payload:**
-  ```json
-  {
-    "username": "your_name",
-    "password": "your_password"
-  }
-  ```
-- **Returns:** JWT token to be used in `Authorization: Bearer <token>` header
+- User authentication with JWT (Login/Register)
+- Secure history creation and retrieval
+- AI job submission and status checking
+- User credit tracking
+- Protected routes on frontend
+- React dashboard, chat, image search, and contact list features
+- Fully Dockerized and CI/CD enabled for Azure
 
-### ➤ Token Usage
-All protected endpoints require an `Authorization` header with the bearer token. Tokens expire in 30 minutes.
+---
 
-## 👤 3. User Profile & Credits
+## 🛠 Tech Stack
 
-### ➤ View Account
-- **Endpoint:** `GET /me`
-- **Returns:** User details and current credit balance
+**Frontend**
+- React
+- Bootstrap
+- React Router
 
-### ➤ Check Credits
-- **Endpoint:** `GET /me/credits`
-- **Returns:**
-  ```json
-  {
-    "credits": 10
-  }
-  ```
+**Backend**
+- FastAPI
+- Pydantic
+- JWT Authentication
+- PostgreSQL / SQLite
+- Docker
 
-### ➤ Credit Policy
-- 1 job = 1 credit  
-- Users start with 10 credits  
-- Submissions without sufficient credits are rejected
+**DevOps**
+- Docker Compose
+- GitHub Actions
+- Azure App Service (via Azure Container Registry)
 
-## 📝 4. Job Submission
+---
 
-### ➤ Submit a Job
-- **Endpoint:** `POST /jobs/submit`
-- **Payload (example for text summarization):**
-  ```json
-  {
-    "task_type": "summarize",
-    "input_data": "This is a long paragraph that needs to be summarized."
-  }
-  ```
-- **Behavior:**  
-  - Deducts 1 credit  
-  - Queues job for background processing  
-  - Returns job ID
+## 🧱 Project Structure
 
-### ➤ Check Job Status
-- **Endpoint:** `GET /jobs/{job_id}/status`
-- **Returns:**
-  ```json
-  {
-    "status": "completed",
-    "output": "Short summary."
-  }
-  ```
+```
+📦project-root
+ ┣ 📁backend
+ ┃ ┣ 📄main.py
+ ┃ ┣ 📁routers
+ ┃ ┣ 📁models
+ ┃ ┣ 📁schemas
+ ┃ ┣ 📄Dockerfile
+ ┣ 📁frontend
+ ┃ ┣ 📄App.js
+ ┃ ┣ 📁components
+ ┃ ┣ 📁auth
+ ┃ ┣ 📁chatgpt
+ ┃ ┣ 📁searchfeatures
+ ┃ ┣ 📄Dockerfile
+ ┣ 📄docker-compose.yml
+ ┣ 📄README.md
+ ┣ 📄.github/workflows/deploy.yml
+```
 
-### ➤ Job Status Values
-- `queued`
-- `in_progress`
-- `completed`
-- `failed`
+---
 
-## 🤖 5. External AI Integration
+## ⚙️ Running Locally with Docker
 
-### ➤ Example Service: OpenAI API (GPT or DALL·E)
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/yourproject.git
+   cd yourproject
+   ```
 
-- Secure connection via API key (`.env`)
-- Input is processed through selected AI model
-- Response is stored in the job record and returned on status check
+2. **Build and start the containers**
+   ```bash
+   docker-compose up --build
+   ```
 
-## 🔔 6. Notification System
+3. **Access the app**
+   - Frontend: `http://localhost:3000`
+   - Backend: `http://localhost:8000`
 
-- **Polling-based updates:** Frontend checks for job status every few seconds
-- **Planned extension:** Webhook/email notifications (for future expansion)
+---
 
-## 🧪 7. Testing Strategy
+## 🧪 API Endpoints (FastAPI)
 
-### ➤ Unit Testing
-- All core functions (auth, credit logic, DB operations) tested with `pytest`
+| Endpoint              | Method | Description                     |
+|----------------------|--------|---------------------------------|
+| `/auth/register`     | POST   | Register new user               |
+| `/auth/login`        | POST   | Login and get access token      |
+| `/history/`          | GET    | Get user's history              |
+| `/history/`          | POST   | Create a new history item       |
+| `/history/{id}`      | PUT    | Update a specific history item  |
+| `/history/{id}`      | DELETE | Delete a specific history item  |
+| `/jobs/submit`       | POST   | Submit a new AI job             |
+| `/jobs/{id}/status`  | GET    | Check job processing status     |
+| `/jobs/credits`      | GET    | Get remaining user credits      |
+| `/user/me`           | GET    | Get profile of authenticated user |
+| `/`                  | GET    | Root (health check)             |
 
-### ➤ API Testing
-- Postman collection included
-- Tested:
-  - Auth flow
-  - Job submission and edge cases
-  - Invalid token handling
+---
 
-### ➤ Functional Testing
-- Tested job queue with multiple users
-- Checked AI API call error handling
-- Monitored DB state after submissions
+## 🧪 Example Test Cases
 
-### ➤ CI/CD Pipeline
-- **GitHub Actions** for:
-  - Linting
-  - Running tests
-  - Docker image build (if included)
+Example tests using FastAPI’s `TestClient`:
 
-## 📦 8. Deployment Instructions
+```python
+def test_create_history():
+    login_response = client.post(
+        "/auth/login",
+        json={"email": "testuser@example.com", "password": "password123"}
+    )
+    token = login_response.json()["access_token"]
+    
+    response = client.post(
+        "/history",
+        headers={"Authorization": f"Bearer {token}"},
+        json={"text": "Test history entry"}
+    )
+    assert response.status_code == 201
+    assert response.json()["message"] == "History created successfully"
 
-### ➤ Local (Dev)
+def test_get_history():
+    login_response = client.post(
+        "/auth/login",
+        json={"email": "testuser@example.com", "password": "password123"}
+    )
+    token = login_response.json()["access_token"]
+    
+    response = client.get(
+        "/history",
+        headers={"Authorization": f"Bearer {token}"}
+    )
+    assert response.status_code == 200
+    assert isinstance(response.json()["history"], list)
+```
+
+Run tests using:
+
 ```bash
-# Create virtualenv
-python -m venv venv
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Start dev server
-uvicorn app.main:app --reload
+pytest tests/
 ```
 
-### ➤ Docker (Optional)
-```bash
-docker build -t ai-cloud-api .
-docker run -p 8000:8000 ai-cloud-api
-```
+---
 
-### ➤ Environment Variables (.env)
-```
-DATABASE_URL=postgresql://user:password@localhost/dbname
-SECRET_KEY=supersecretkey
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-AI_API_KEY=your_key_here
-```
+## 🔐 Authentication (JWT)
 
-## 🧾 9. API Reference Summary
-
-| Endpoint               | Method | Auth Required | Description                          |
-|------------------------|--------|----------------|--------------------------------------|
-| `/signup`              | POST   | ❌             | Register new user                    |
-| `/login`               | POST   | ❌             | Get JWT token                        |
-| `/me`                  | GET    | ✅             | Get user profile                     |
-| `/me/credits`          | GET    | ✅             | View current credit balance          |
-| `/jobs/submit`         | POST   | ✅             | Submit job for processing            |
-| `/jobs/{id}/status`    | GET    | ✅             | Get status and result of a job       |
-| `/docs`                | GET    | ❌             | Swagger UI documentation             |
-| `/redoc`               | GET    | ❌             | ReDoc formatted documentation        |
-
-## 📹 10. Demo Video
-
-- **Link:** [YouTube or Panopto URL]
-- **Overview:**
-  - User registration/login
-  - Submit AI job
-  - Monitor job status
-  - Show credits in action
-  - Preview Swagger docs
-
-## 📂 11. Repository & Source Links
-
-- **GitHub Repository:** [GitHub URL]
-- **Source Code Structure:**
+- Tokens are stored in `localStorage` under `session_data`.
+- On each request, the token is sent via the `Authorization` header:
   ```
-  app/
-    ├── main.py
-    ├── models/
-    ├── schemas/
-    ├── api/
-    ├── core/
-    ├── services/
-  client/
-    ├── index.html / react app
-  tests/
-    ├── test_auth.py
-    ├── test_jobs.py
+  Authorization: Bearer <access_token>
   ```
 
-## 🔁 12. Future Improvements
+---
 
-- Webhook notifications or email alerts
-- Admin panel for credit management
-- More AI task types (e.g., image generation, translation)
-- Performance scaling with cloud deployment
+## 🌐 Deployment
+
+Deployed using GitHub Actions:
+
+- On push to `main`, the app builds Docker images and pushes to Azure Container Registry.
+- Azure App Service pulls the latest image and redeploys the app.
+
+---
+
+## 📌 Frontend Routes
+
+| Route            | Auth | Component         |
+|------------------|------|-------------------|
+| `/login`         | ❌   | Login             |
+| `/register`      | ❌   | Register          |
+| `/`              | ✅   | MainDashboard     |
+| `/create`        | ✅   | ContactForm       |
+| `/chatgpt`       | ✅   | ChatGPT Dashboard |
+| `/search-images` | ✅   | Image Search      |
+
+---
+
+## 📧 Contact
+
+Maintainer: **Ronit Kayastha**  
+Email: `your-email@example.com`  
+GitHub: [@yourusername](https://github.com/yourusername)
+
+---
+
+## ✅ License
+
+This project is licensed under the MIT License.
